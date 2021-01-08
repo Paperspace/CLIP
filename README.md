@@ -1,16 +1,12 @@
 # CLIP
 
-[[Blog]](https://openai.com/blog/clip/) [[Paper]](https://cdn.openai.com/papers/Learning_Transferable_Visual_Models_From_Natural_Language_Supervision.pdf) [[Model Card]](model-card.md) [[Colab]](https://colab.research.google.com/github/openai/clip/blob/master/Interacting_with_CLIP.ipynb)
+[[Blog]](https://openai.com/blog/clip/) [[Paper]](https://cdn.openai.com/papers/Learning_Transferable_Visual_Models_From_Natural_Language_Supervision.pdf) [[Model Card]](model-card.md) [[Colab]](https://colab.research.google.com/github/openai/clip/blob/master/Interacting_with_CLIP.ipynb) [[Gradient]](https://console.paperspace.com/github/openai/clip/blob/master/Interacting_with_CLIP.ipynb)
 
 CLIP (Contrastive Language-Image Pre-Training) is a neural network trained on a variety of (image, text) pairs. It can be instructed in natural language to predict the most relevant text snippet, given an image, without directly optimizing for the task, similarly to the zero-shot capabilities of GPT-2 and 3. We found CLIP matches the performance of the original ResNet50 on ImageNet “zero-shot” without using any of the original 1.28M labeled examples, overcoming several major challenges in computer vision.
-
-
 
 ## Approach
 
 ![CLIP](CLIP.png)
-
-
 
 ## Usage
 
@@ -37,13 +33,12 @@ text = clip.tokenize(["a diagram", "a dog", "a cat"]).to(device)
 with torch.no_grad():
     image_features = model.encode_image(image)
     text_features = model.encode_text(text)
-    
+
     logits_per_image, logits_per_text = model(image, text)
     probs = logits_per_image.softmax(dim=-1).cpu().numpy()
-    
+
 print("Label probs:", probs)  # prints: [[0.9956   0.002144 0.002213]]
 ```
-
 
 ## API
 
@@ -76,8 +71,6 @@ Given a batch of text tokens, returns the text features encoded by the language 
 #### `model(image: Tensor, text: Tensor)`
 
 Given a batch of images and a batch of text tokens, returns two Tensors, containing the logit scores corresponding to each image and text input. The values are cosine similarities between the corresponding image and text features, times 100.
-
-
 
 ## More Examples
 
@@ -134,7 +127,6 @@ Top predictions:
 
 Note that this example uses the `encode_image()` and `encode_text()` methods that return the encoded features of given inputs.
 
-
 ### Linear-probe evaluation
 
 The example below uses [scikit-learn](https://scikit-learn.org/) to perform logistic regression on image features.
@@ -163,7 +155,7 @@ test = CIFAR100(root, download=True, train=False, transform=preprocess)
 def get_features(dataset):
     all_features = []
     all_labels = []
-    
+
     with torch.no_grad():
         for images, labels in tqdm(DataLoader(dataset, batch_size=100)):
             features = model.encode_image(images.to(device))
